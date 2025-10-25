@@ -34,14 +34,17 @@ pipeline {
 
         stage('3. Push Docker Image') {
             steps {
-                // Log in to Docker Hub using the stored credentials
-                docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDS_ID) {
-                    
-                    // Push the image
-                    docker.image(env.DOCKER_IMAGE_NAME).push()
+                // THIS 'script' BLOCK IS THE FIX
+                script {
+                    // Log in to Docker Hub using the stored credentials
+                    docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDS_ID) {
+                        
+                        // Push the image
+                        docker.image(env.DOCKER_IMAGE_NAME).push()
 
-                    // Also push a 'latest' tag
-                    docker.image(env.DOCKER_IMAGE_NAME).push('latest')
+                        // Also push a 'latest' tag
+                        docker.image(env.DOCKER_IMAGE_NAME).push('latest')
+                    }
                 }
             }
         }
@@ -53,7 +56,7 @@ pipeline {
                     
                     // Use kubectl to update the image on the deployment
                     // This command finds the deployment and sets the new image
-                    sh "kubectl set image deployment/my-app-deployment my-app=${env.DOCKER_IMAGE_NAME}"
+                    sh "kubectl set image deployment/my-app-deployment my-app=${env.DOKCER_IMAGE_NAME}"
                     
                     // Check the rollout status
                     sh "kubectl rollout status deployment/my-app-deployment"
@@ -69,7 +72,7 @@ pipeline {
             
             // Clean up the local Docker image
             script {
-                if (env.DOCKER_IMAGE_NAME) {
+                if (env.DOCKT_IMAGE_NAME) {
                     sh "docker rmi ${env.DOCKER_IMAGE_NAME}"
                     sh "docker rmi ${DOCKERHUB_USERNAME}/${APP_NAME}:latest"
                 }
