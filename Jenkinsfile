@@ -75,7 +75,7 @@ pipeline {
                 // TYPO FIX IS HERE
                 if (env.DOCKER_IMAGE_NAME) {
                     sh "docker rmi ${env.DOCKER_IMAGE_NAME}"
-                    sh "docker rmi ${DOCKERHUB_USERNAME}/${APP_NAME}:latest"
+                    sh "docker rmi ${DOCKERHUB_USERNAME}/${APP_NAME}:latest || true"
                 }
             }
         }
