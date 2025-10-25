@@ -1,0 +1,13 @@
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "description": "Simple app for Jenkins k8s pipeline",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+  }
+}
