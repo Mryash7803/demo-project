@@ -13,8 +13,8 @@ pipeline {
     stages {
         stage('1. Checkout Code') {
             steps {
-                // Get code from Git
-                git 'https://github.com/Mryash7803/demo-project'
+                // Get code from Git - FIX IS HERE
+                git branch: 'main', url: 'https://github.com/Mryash7803/demo-project'
             }
         }
 
@@ -34,7 +34,6 @@ pipeline {
 
         stage('3. Push Docker Image') {
             steps {
-                // THIS 'script' BLOCK IS THE FIX
                 script {
                     // Log in to Docker Hub using the stored credentials
                     docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDS_ID) {
@@ -56,7 +55,8 @@ pipeline {
                     
                     // Use kubectl to update the image on the deployment
                     // This command finds the deployment and sets the new image
-                    sh "kubectl set image deployment/my-app-deployment my-app=${env.DOKCER_IMAGE_NAME}"
+                    // TYPO FIX IS HERE
+                    sh "kubectl set image deployment/my-app-deployment my-app=${env.DOCKER_IMAGE_NAME}"
                     
                     // Check the rollout status
                     sh "kubectl rollout status deployment/my-app-deployment"
@@ -72,7 +72,8 @@ pipeline {
             
             // Clean up the local Docker image
             script {
-                if (env.DOCKT_IMAGE_NAME) {
+                // TYPO FIX IS HERE
+                if (env.DOCKER_IMAGE_NAME) {
                     sh "docker rmi ${env.DOCKER_IMAGE_NAME}"
                     sh "docker rmi ${DOCKERHUB_USERNAME}/${APP_NAME}:latest"
                 }
